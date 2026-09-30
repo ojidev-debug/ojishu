@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcade Mini Games</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 { 
+            color: #2d3436; 
+            font-size: 24px; 
+            margin-bottom: 15px; 
+        }
+        p { 
+            color: #636e72; 
+            font-size: 14px; 
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        /* Menu Navigasi Game */
+        .menu-container {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .btn-tab {
+            background: #dfe6e9;
+            color: #2d3436;
+            border: none;
+            padding: 8px 12px;
+            font-size: 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .btn-tab.active {
+            background: #0984e3;
+            color: white;
+        }
+
+        /* Area Game */
+        .game-panel {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .game-panel.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form & Input */
+        input {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            text-align: center;
+            outline: none;
+        }
+        input:focus {
+            border-color: #0984e3;
+        }
+
+        /* Tombol Utama */
+        .btn-action {
+            background-color: #0984e3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+            width: 80%;
+        }
+        .btn-action:hover { 
+            background-color: #74b9ff; 
+        }
+
+        /* Pilihan Gunting Batu Kertas */
+        .gbk-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .btn-gbk {
+            font-size: 28px;
+            background: #f1f2f6;
+            border: 2px solid #dfe6e9;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .btn-gbk:hover {
+            transform: scale(1.1);
+            background: #eccc68;
+        }
+
+        /* Area Refleks */
+        .refleks-box {
+            height: 120px;
+            border-radius: 12px;
+            background-color: #e17055;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 15px;
+            transition: background 0.1s;
+        }
+
+        /* Pesan Hasil */
+        .pesan {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #2d3436;
+            min-height: 24px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>🎮 Arcade Mini Games</h1>
+        
+        <!-- Pilihan Mode Permainan -->
+        <div class="menu-container">
+            <button class="btn-tab active" onclick="pindahGame('tebak')">🎯 Tebak Angka</button>
+            <button class="btn-tab" onclick="pindahGame('gbk')">✂️ Suit</button>
+            <button class="btn-tab" onclick="pindahGame('refleks')">⚡ Refleks</button>
+        </div>
+
+        <!-- GAME 1: TEBAK ANGKA -->
+        <div id="game-tebak" class="game-panel active">
+            <p>Tebak angka rahasia antara <strong>1 sampai 100</strong>!</p>
+            <input type="number" id="inputTebakan" min="1" max="100" placeholder="Masukkan angka">
+            <br>
+            <button class="btn-action" onclick="tebakAngka()">Tebak!</button>
+            <p id="pesan-tebak" class="pesan">Ayo mulai menebak!</p>
+        </div>
+
+        <!-- GAME 2: GUNTING BATU KERTAS -->
+        <div id="game-gbk" class="game-panel">
+            <p>Pilih tanganmu dan kalahkan komputer!</p>
+            <div class="gbk-options">
+                <button class="btn-gbk" onclick="mainGBK('✊')">✊</button>
+                <button class="btn-gbk" onclick="mainGBK('🖐️')">🖐️</button>
+                <button class="btn-gbk" onclick="mainGBK('✌️')">✌️</button>
+            </div>
+            <p id="pesan-gbk" class="pesan">Klik salah satu ikon untuk bertarung!</p>
+        </div>
+
+        <!-- GAME 3: UJI REFLEKS -->
+        <div id="game-refleks" class="game-panel">
+            <p>Uji seberapa cepat reaksi jarimu!</p>
+            <div id="refleksBox" class="refleks-box" onclick="tanganiKlikRefleks()">
+                Klik "Mulai" di bawah!
+            </div>
+            <button id="btnMulaiRefleks" class="btn-action" onclick="mulaiUjiRefleks()">Mulai Tes</button>
+            <p id="pesan-refleks" class="pesan">Siapkan mentalmu!</p>
+        </div>
+    </div>
+
+    <script>
+        // --- NAVIGASI ANTAR GAME ---
+        function pindahGame(namaGame) {
+            // Sembunyikan semua panel
+            document.querySelectorAll('.game-panel').forEach(panel => panel.classList.remove('active'));
+            document.querySelectorAll('.btn-tab').forEach(btn => btn.classList.remove('active'));
+
+            // Tampilkan panel yang dipilih
+            document.getElementById(`game-${namaGame}`).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // --- LOGIKA GAME 1: TEBAK ANGKA ---
+        let angkaRahasia = Math.floor(Math.random() * 100) + 1;
+        let percobaan = 0;
+
+        function tebakAngka() {
+            const inputElement = document.getElementById("inputTebakan");
+            const pesanElement = document.getElementById("pesan-tebak");
+            const tebakan = Number(inputElement.value);
+
+            if (!tebakan || tebakan < 1 || tebakan > 100) {
+                pesanElement.innerHTML = "⚠️ Masukkan angka antara 1 dan 100!";
+                pesanElement.style.color = "#d63031";
+                return;
+            }
+
+            percobaan++;
+
+            if (tebakan === angkaRahasia) {
+                pesanElement.innerHTML = `🎉 Benar! Angkanya ${angkaRahasia}. (${percobaan}x percobaan)`;
+                pesanElement.style.color = "#00b894";
+                // Reset angka rahasia untuk game baru
+                angkaRahasia = Math.floor(Math.random() * 100) + 1;
+                percobaan = 0;
+            } else if (tebakan > angkaRahasia) {
+                pesanElement.innerHTML = "📉 Terlalu besar! Coba lagi.";
+                pesanElement.style.color = "#e17055";
+            } else {
+                pesanElement.innerHTML = "📈 Terlalu kecil! Coba lagi.";
+                pesanElement.style.color = "#0984e3";
+            }
+
+            inputElement.value = "";
+            inputElement.focus();
+        }
+
+        // --- LOGIKA GAME 2: GUNTING BATU KERTAS ---
+        function mainGBK(pilihanPemain) {
+            const opsi = ['✊', '🖐️', '✌️'];
+            const pilihanKomputer = opsi[Math.floor(Math.random() * 3)];
+            const pesanElement = document.getElementById("pesan-gbk");
+
+            if (pilihanPemain === pilihanKomputer) {
+                pesanElement.innerHTML = `Seri! Kamu: ${pilihanPemain} vs Musuh: ${pilihanKomputer}`;
+                pesanElement.style.color = "#636e72";
+            } else if (
+                (pilihanPemain === '✊' && pilihanKomputer === '✌️') ||
+                (pilihanPemain === '🖐️' && pilihanKomputer === '✊') ||
+                (pilihanPemain === '✌️' && pilihanKomputer === '🖐️')
+            ) {
+                pesanElement.innerHTML = `🎉 Menang! Kamu: ${pilihanPemain} vs Musuh: ${pilihanKomputer}`;
+                pesanElement.style.color = "#00b894";
+            } else {
+                pesanElement.innerHTML = `💀 Kalah! Kamu: ${pilihanPemain} vs Musuh: ${pilihanKomputer}`;
+                pesanElement.style.color = "#d63031";
+            }
+        }
+
+        // --- LOGIKA GAME 3: UJI REFLEKS ---
+        let waktuMulai = 0;
+        let waktuSelesai = 0;
+        let timerRefleks = null;
+        let statusRefleks = "idle"; // idle, waiting, ready
+
+        const boxRefleks = document.getElementById("refleksBox");
+        const pesanRefleks = document.getElementById("pesan-refleks");
+        const btnMulai = document.getElementById("btnMulaiRefleks");
+
+        function mulaiUjiRefleks() {
+            statusRefleks = "waiting";
+            boxRefleks.style.backgroundColor = "#e17055"; // Merah
+            boxRefleks.innerHTML = "Tunggu warna HIJAU...";
+            pesanRefleks.innerHTML = "Jangan klik dulu!";
+            pesanRefleks.style.color = "#d63031";
+            btnMulai.style.display = "none";
+
+            // Waktu acak antara 2 sampai 5 detik
+            const jedaWaktu = Math.floor(Math.random() * 3000) + 2000;
+
+            timerRefleks = setTimeout(() => {
+                statusRefleks = "ready";
+                boxRefleks.style.backgroundColor = "#00b894"; // Hijau
+                boxRefleks.innerHTML = "KLIK SEKARANG!";
+                waktuMulai = Date.now();
+            }, jedaWaktu);
+        }
+
+        function tanganiKlikRefleks() {
+            if (statusRefleks === "waiting") {
+                // Jika diklik terlalu cepat (masih merah)
+                clearTimeout(timerRefleks);
+                statusRefleks = "idle";
+                boxRefleks.style.backgroundColor = "#dfe6e9";
+                boxRefleks.style.color = "#2d3436";
+                boxRefleks.innerHTML = "Terlalu Cepat!";
+                pesanRefleks.innerHTML = "❌ Kamu mengklik sebelum hijau. Coba lagi!";
+                pesanRefleks.style.color = "#d63031";
+                btnMulai.style.display = "inline-block";
+            } else if (statusRefleks === "ready") {
+                // Jika diklik saat hijau
+                waktuSelesai = Date.now();
+                const selisihWaktu = waktuSelesai - waktuMulai;
+                statusRefleks = "idle";
+                boxRefleks.style.backgroundColor = "#0984e3";
+                boxRefleks.innerHTML = `${selisihWaktu} ms`;
+                pesanRefleks.innerHTML = `⚡ Kecepatan reaksimu: <strong>${selisihWaktu} milidetik</strong>!`;
+                pesanRefleks.style.color = "#00b894";
+                btnMulai.style.display = "inline-block";
+            }
+        }
+    </script>
+
+</body>
+</html>
