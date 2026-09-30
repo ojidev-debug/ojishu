@@ -1,326 +1,596 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arcade Mini Games</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Cyber Runner</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    
     <style>
         * {
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #74b9ff, #a29bfe);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            font-family: 'Rajdhani', sans-serif;
+            background-color: #030712;
+            color: #f3f4f6;
+            overflow: hidden;
+            touch-action: none;
         }
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
         }
-        h1 { 
-            color: #2d3436; 
-            font-size: 24px; 
-            margin-bottom: 15px; 
-        }
-        p { 
-            color: #636e72; 
-            font-size: 14px; 
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-
-        /* Menu Navigasi Game */
-        .menu-container {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .btn-tab {
-            background: #dfe6e9;
-            color: #2d3436;
-            border: none;
-            padding: 8px 12px;
-            font-size: 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
-        .btn-tab.active {
-            background: #0984e3;
-            color: white;
-        }
-
-        /* Area Game */
-        .game-panel {
-            display: none;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        .game-panel.active {
+        canvas {
             display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Form & Input */
-        input {
-            width: 80%;
-            padding: 10px;
-            font-size: 16px;
-            margin-bottom: 15px;
-            border: 2px solid #dfe6e9;
-            border-radius: 8px;
-            text-align: center;
-            outline: none;
-        }
-        input:focus {
-            border-color: #0984e3;
-        }
-
-        /* Tombol Utama */
-        .btn-action {
-            background-color: #0984e3;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
-            width: 80%;
-        }
-        .btn-action:hover { 
-            background-color: #74b9ff; 
-        }
-
-        /* Pilihan Gunting Batu Kertas */
-        .gbk-options {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        .btn-gbk {
-            font-size: 28px;
-            background: #f1f2f6;
-            border: 2px solid #dfe6e9;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
-        }
-        .btn-gbk:hover {
-            transform: scale(1.1);
-            background: #eccc68;
-        }
-
-        /* Area Refleks */
-        .refleks-box {
-            height: 120px;
             border-radius: 12px;
-            background-color: #e17055;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 18px;
-            cursor: pointer;
-            user-select: none;
-            margin-bottom: 15px;
-            transition: background 0.1s;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.15);
         }
-
-        /* Pesan Hasil */
-        .pesan {
-            margin-top: 15px;
-            font-weight: bold;
-            color: #2d3436;
-            min-height: 24px;
+        .neon-glow-cyan {
+            text-shadow: 0 0 10px #00f3ff, 0 0 20px #00f3ff, 0 0 30px #00f3ff;
+        }
+        .neon-glow-pink {
+            text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 30px #ff007f;
+        }
+        .btn-neon-cyan {
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.25), rgba(0, 243, 255, 0.05));
+            border: 2px solid #00f3ff;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+            transition: all 0.15s ease-in-out;
+        }
+        .btn-neon-cyan:active {
+            transform: scale(0.95);
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.45), rgba(0, 243, 255, 0.1));
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
+        }
+        .btn-neon-pink {
+            background: linear-gradient(135deg, rgba(255, 0, 127, 0.25), rgba(255, 0, 127, 0.05));
+            border: 2px solid #ff007f;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.3);
+            transition: all 0.15s ease-in-out;
+        }
+        .btn-neon-pink:active {
+            transform: scale(0.95);
+            background: linear-gradient(135deg, rgba(255, 0, 127, 0.45), rgba(255, 0, 127, 0.1));
+            box-shadow: 0 0 25px rgba(255, 0, 127, 0.8);
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
         }
     </style>
 </head>
-<body>
+<body class="h-screen w-screen flex flex-col justify-between items-center p-2 sm:p-4 select-none">
 
-    <div class="card">
-        <h1>🎮 Arcade Mini Games</h1>
-        
-        <!-- Pilihan Mode Permainan -->
-        <div class="menu-container">
-            <button class="btn-tab active" onclick="pindahGame('tebak')">🎯 Tebak Angka</button>
-            <button class="btn-tab" onclick="pindahGame('gbk')">✂️ Suit</button>
-            <button class="btn-tab" onclick="pindahGame('refleks')">⚡ Refleks</button>
-        </div>
-
-        <!-- GAME 1: TEBAK ANGKA -->
-        <div id="game-tebak" class="game-panel active">
-            <p>Tebak angka rahasia antara <strong>1 sampai 100</strong>!</p>
-            <input type="number" id="inputTebakan" min="1" max="100" placeholder="Masukkan angka">
-            <br>
-            <button class="btn-action" onclick="tebakAngka()">Tebak!</button>
-            <p id="pesan-tebak" class="pesan">Ayo mulai menebak!</p>
-        </div>
-
-        <!-- GAME 2: GUNTING BATU KERTAS -->
-        <div id="game-gbk" class="game-panel">
-            <p>Pilih tanganmu dan kalahkan komputer!</p>
-            <div class="gbk-options">
-                <button class="btn-gbk" onclick="mainGBK('✊')">✊</button>
-                <button class="btn-gbk" onclick="mainGBK('🖐️')">🖐️</button>
-                <button class="btn-gbk" onclick="mainGBK('✌️')">✌️</button>
+    <header class="w-full max-w-xl glass-panel rounded-2xl p-3 sm:p-4 flex justify-between items-center z-10 shadow-2xl">
+        <div class="flex items-center space-x-3">
+            <div>
+                <span class="text-[10px] sm:text-xs font-bold tracking-widest text-cyan-400 uppercase block">Score</span>
+                <span id="scoreDisplay" class="font-orbitron text-xl sm:text-3xl font-extrabold text-white neon-glow-cyan">0</span>
             </div>
-            <p id="pesan-gbk" class="pesan">Klik salah satu ikon untuk bertarung!</p>
         </div>
 
-        <!-- GAME 3: UJI REFLEKS -->
-        <div id="game-refleks" class="game-panel">
-            <p>Uji seberapa cepat reaksi jarimu!</p>
-            <div id="refleksBox" class="refleks-box" onclick="tanganiKlikRefleks()">
-                Klik "Mulai" di bawah!
-            </div>
-            <button id="btnMulaiRefleks" class="btn-action" onclick="mulaiUjiRefleks()">Mulai Tes</button>
-            <p id="pesan-refleks" class="pesan">Siapkan mentalmu!</p>
+        <div class="text-center">
+            <h1 class="font-orbitron text-base sm:text-xl font-black italic tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-500">
+                NEON RUNNER
+            </h1>
+            <span id="multiplierDisplay" class="text-[10px] font-bold text-yellow-400 tracking-wider uppercase block">x1 Multiplier</span>
         </div>
-    </div>
+
+        <div class="text-right">
+            <span class="text-[10px] sm:text-xs font-bold tracking-widest text-pink-400 uppercase block">High Score</span>
+            <span id="highScoreDisplay" class="font-orbitron text-xl sm:text-3xl font-extrabold text-white neon-glow-pink">0</span>
+        </div>
+    </header>
+
+    <main class="relative w-full max-w-xl flex-1 my-2 sm:my-3 flex items-center justify-center overflow-hidden rounded-2xl glass-panel border border-cyan-500/30">
+        <canvas id="gameCanvas" class="w-full h-full bg-gray-950"></canvas>
+
+        <!-- Start & Game Over Menu Overlay -->
+        <div id="uiOverlay" class="absolute inset-0 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-20">
+            <h2 id="overlayTitle" class="font-orbitron text-3xl sm:text-5xl font-black text-cyan-400 mb-2 neon-glow-cyan tracking-wider">
+                NEON RUNNER
+            </h2>
+            <p id="overlaySubtitle" class="text-gray-300 mb-6 text-xs sm:text-sm max-w-xs leading-relaxed">
+                Lompati rintangan merah, menunduk dari bahaya laser tinggi, dan ambil kristal cyan!
+            </p>
+
+            <!-- Stats Box -->
+            <div id="finalStats" class="hidden mb-6 glass-panel p-4 rounded-xl border border-pink-500/30 w-full max-w-xs space-y-2">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-400">Skor Akhir:</span>
+                    <span id="finalScore" class="font-orbitron text-cyan-400 font-bold text-lg">0</span>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-400">Kristal Didapat:</span>
+                    <span id="finalCrystals" class="font-orbitron text-yellow-400 font-bold text-lg">0</span>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-400">Skor Tertinggi:</span>
+                    <span id="finalHighScore" class="font-orbitron text-pink-400 font-bold text-lg">0</span>
+                </div>
+            </div>
+
+            <!-- Start / Restart Button -->
+            <button id="startBtn" class="btn-neon-cyan px-8 py-3.5 rounded-full text-white font-orbitron font-bold text-base sm:text-lg uppercase tracking-widest cursor-pointer">
+                Mulai Game
+            </button>
+
+            <!-- Audio Toggle & Controls Legend -->
+            <div class="mt-6 flex flex-col items-center gap-2">
+                <button id="audioToggleBtn" class="text-xs text-cyan-400 hover:text-cyan-300 underline font-bold">
+                    🔊 Suara: AKTIF
+                </button>
+                <p class="text-[11px] text-gray-500 hidden sm:block">
+                    [W / Spasi / Panah Atas] = Lompat | [S / Panah Bawah] = Menunduk
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="w-full max-w-xl grid grid-cols-2 gap-3 z-10 pb-1">
+        <button id="btnDuck" class="btn-neon-pink py-3.5 sm:py-4 rounded-xl flex items-center justify-center text-pink-300 font-orbitron font-bold text-sm tracking-wider active:scale-95">
+            SLIDE / DUCK
+        </button>
+        <button id="btnJump" class="btn-neon-cyan py-3.5 sm:py-4 rounded-xl flex items-center justify-center text-cyan-300 font-orbitron font-bold text-sm tracking-wider active:scale-95">
+            JUMP
+        </button>
+    </footer>
 
     <script>
-        // --- NAVIGASI ANTAR GAME ---
-        function pindahGame(namaGame) {
-            // Sembunyikan semua panel
-            document.querySelectorAll('.game-panel').forEach(panel => panel.classList.remove('active'));
-            document.querySelectorAll('.btn-tab').forEach(btn => btn.classList.remove('active'));
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+        let soundEnabled = true;
 
-            // Tampilkan panel yang dipilih
-            document.getElementById(`game-${namaGame}`).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        // --- LOGIKA GAME 1: TEBAK ANGKA ---
-        let angkaRahasia = Math.floor(Math.random() * 100) + 1;
-        let percobaan = 0;
-
-        function tebakAngka() {
-            const inputElement = document.getElementById("inputTebakan");
-            const pesanElement = document.getElementById("pesan-tebak");
-            const tebakan = Number(inputElement.value);
-
-            if (!tebakan || tebakan < 1 || tebakan > 100) {
-                pesanElement.innerHTML = "⚠️ Masukkan angka antara 1 dan 100!";
-                pesanElement.style.color = "#d63031";
-                return;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
             }
-
-            percobaan++;
-
-            if (tebakan === angkaRahasia) {
-                pesanElement.innerHTML = `🎉 Benar! Angkanya ${angkaRahasia}. (${percobaan}x percobaan)`;
-                pesanElement.style.color = "#00b894";
-                // Reset angka rahasia untuk game baru
-                angkaRahasia = Math.floor(Math.random() * 100) + 1;
-                percobaan = 0;
-            } else if (tebakan > angkaRahasia) {
-                pesanElement.innerHTML = "📉 Terlalu besar! Coba lagi.";
-                pesanElement.style.color = "#e17055";
-            } else {
-                pesanElement.innerHTML = "📈 Terlalu kecil! Coba lagi.";
-                pesanElement.style.color = "#0984e3";
-            }
-
-            inputElement.value = "";
-            inputElement.focus();
-        }
-
-        // --- LOGIKA GAME 2: GUNTING BATU KERTAS ---
-        function mainGBK(pilihanPemain) {
-            const opsi = ['✊', '🖐️', '✌️'];
-            const pilihanKomputer = opsi[Math.floor(Math.random() * 3)];
-            const pesanElement = document.getElementById("pesan-gbk");
-
-            if (pilihanPemain === pilihanKomputer) {
-                pesanElement.innerHTML = `Seri! Kamu: ${pilihanPemain} vs Musuh: ${pilihanKomputer}`;
-                pesanElement.style.color = "#636e72";
-            } else if (
-                (pilihanPemain === '✊' && pilihanKomputer === '✌️') ||
-                (pilihanPemain === '🖐️' && pilihanKomputer === '✊') ||
-                (pilihanPemain === '✌️' && pilihanKomputer === '🖐️')
-            ) {
-                pesanElement.innerHTML = `🎉 Menang! Kamu: ${pilihanPemain} vs Musuh: ${pilihanKomputer}`;
-                pesanElement.style.color = "#00b894";
-            } else {
-                pesanElement.innerHTML = `💀 Kalah! Kamu: ${pilihanPemain} vs Musuh: ${pilihanKomputer}`;
-                pesanElement.style.color = "#d63031";
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
             }
         }
 
-        // --- LOGIKA GAME 3: UJI REFLEKS ---
-        let waktuMulai = 0;
-        let waktuSelesai = 0;
-        let timerRefleks = null;
-        let statusRefleks = "idle"; // idle, waiting, ready
+        function playSound(type) {
+            if (!soundEnabled || !audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
 
-        const boxRefleks = document.getElementById("refleksBox");
-        const pesanRefleks = document.getElementById("pesan-refleks");
-        const btnMulai = document.getElementById("btnMulaiRefleks");
+                const now = audioCtx.currentTime;
 
-        function mulaiUjiRefleks() {
-            statusRefleks = "waiting";
-            boxRefleks.style.backgroundColor = "#e17055"; // Merah
-            boxRefleks.innerHTML = "Tunggu warna HIJAU...";
-            pesanRefleks.innerHTML = "Jangan klik dulu!";
-            pesanRefleks.style.color = "#d63031";
-            btnMulai.style.display = "none";
-
-            // Waktu acak antara 2 sampai 5 detik
-            const jedaWaktu = Math.floor(Math.random() * 3000) + 2000;
-
-            timerRefleks = setTimeout(() => {
-                statusRefleks = "ready";
-                boxRefleks.style.backgroundColor = "#00b894"; // Hijau
-                boxRefleks.innerHTML = "KLIK SEKARANG!";
-                waktuMulai = Date.now();
-            }, jedaWaktu);
-        }
-
-        function tanganiKlikRefleks() {
-            if (statusRefleks === "waiting") {
-                // Jika diklik terlalu cepat (masih merah)
-                clearTimeout(timerRefleks);
-                statusRefleks = "idle";
-                boxRefleks.style.backgroundColor = "#dfe6e9";
-                boxRefleks.style.color = "#2d3436";
-                boxRefleks.innerHTML = "Terlalu Cepat!";
-                pesanRefleks.innerHTML = "❌ Kamu mengklik sebelum hijau. Coba lagi!";
-                pesanRefleks.style.color = "#d63031";
-                btnMulai.style.display = "inline-block";
-            } else if (statusRefleks === "ready") {
-                // Jika diklik saat hijau
-                waktuSelesai = Date.now();
-                const selisihWaktu = waktuSelesai - waktuMulai;
-                statusRefleks = "idle";
-                boxRefleks.style.backgroundColor = "#0984e3";
-                boxRefleks.innerHTML = `${selisihWaktu} ms`;
-                pesanRefleks.innerHTML = `⚡ Kecepatan reaksimu: <strong>${selisihWaktu} milidetik</strong>!`;
-                pesanRefleks.style.color = "#00b894";
-                btnMulai.style.display = "inline-block";
+                if (type === 'jump') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(160, now);
+                    osc.frequency.exponentialRampToValueAtTime(650, now + 0.15);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
+                    osc.start(now);
+                    osc.stop(now + 0.15);
+                } else if (type === 'duck') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(150, now + 0.12);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+                    osc.start(now);
+                    osc.stop(now + 0.12);
+                } else if (type === 'crystal') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.24);
+                    osc.start(now);
+                    osc.stop(now + 0.24);
+                } else if (type === 'gameover') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.exponentialRampToValueAtTime(40, now + 0.5);
+                    gain.gain.setValueAtTime(0.35, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.5);
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                }
+            } catch (e) {
+                console.warn("Audio Context Warning:", e);
             }
         }
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let isRunning = false;
+        let score = 0;
+        let crystalsCollected = 0;
+        let highScore = parseInt(localStorage.getItem('cyberrunner_highscore') || '0', 10);
+        document.getElementById('highScoreDisplay').innerText = highScore;
+
+        let frameCount = 0;
+        let gameSpeed = 5;
+
+        // Player configuration
+        const player = {
+            x: 50,
+            y: 0,
+            normalWidth: 32,
+            normalHeight: 48,
+            duckHeight: 24,
+            width: 32,
+            height: 48,
+            vy: 0,
+            jumpPower: -13.5,
+            gravity: 0.7,
+            grounded: false,
+            isDucking: false,
+            color: '#00f3ff',
+            trail: []
+        };
+
+        let obstacles = [];
+        let crystals = [];
+        let particles = [];
+
+        function createParticles(x, y, color, count = 12) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    size: Math.random() * 4 + 2,
+                    color: color,
+                    alpha: 1,
+                    decay: Math.random() * 0.03 + 0.02
+                });
+            }
+        }
+
+        function resetGame() {
+            score = 0;
+            crystalsCollected = 0;
+            gameSpeed = 5;
+            frameCount = 0;
+            obstacles = [];
+            crystals = [];
+            particles = [];
+
+            player.x = Math.max(30, canvas.width * 0.12);
+            player.height = player.normalHeight;
+            player.width = player.normalWidth;
+            player.y = canvas.height - 60 - player.height;
+            player.vy = 0;
+            player.isDucking = false;
+            player.trail = [];
+
+            document.getElementById('scoreDisplay').innerText = score;
+            document.getElementById('multiplierDisplay').innerText = 'x1 Multiplier';
+        }
+
+        function startGame() {
+            initAudio();
+            resetGame();
+            isRunning = true;
+            document.getElementById('uiOverlay').classList.add('hidden');
+            requestAnimationFrame(gameLoop);
+        }
+
+        function gameOver() {
+            isRunning = false;
+            playSound('gameover');
+
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('cyberrunner_highscore', highScore.toString());
+                document.getElementById('highScoreDisplay').innerText = highScore;
+            }
+
+            document.getElementById('overlayTitle').innerText = "GAME OVER";
+            document.getElementById('overlaySubtitle').innerText = "Sistem Cyber terkendala! Kamu menabrak rintangan.";
+            document.getElementById('finalScore').innerText = score;
+            document.getElementById('finalCrystals').innerText = crystalsCollected;
+            document.getElementById('finalHighScore').innerText = highScore;
+            document.getElementById('finalStats').classList.remove('hidden');
+            document.getElementById('startBtn').innerText = "Main Lagi";
+            document.getElementById('uiOverlay').classList.remove('hidden');
+        }
+
+        function triggerJump() {
+            if (player.grounded && !player.isDucking) {
+                player.vy = player.jumpPower;
+                player.grounded = false;
+                playSound('jump');
+            }
+        }
+
+        function setDuck(ducking) {
+            if (player.grounded && ducking && !player.isDucking) {
+                player.isDucking = true;
+                player.height = player.duckHeight;
+                player.y += player.normalHeight - player.duckHeight;
+                playSound('duck');
+            } else if (!ducking && player.isDucking) {
+                player.isDucking = false;
+                player.y -= player.normalHeight - player.duckHeight;
+                player.height = player.normalHeight;
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (['Space', 'ArrowUp', 'KeyW'].includes(e.code)) {
+                e.preventDefault();
+                triggerJump();
+            }
+            if (['ArrowDown', 'KeyS'].includes(e.code)) {
+                e.preventDefault();
+                setDuck(true);
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (['ArrowDown', 'KeyS'].includes(e.code)) {
+                setDuck(false);
+            }
+        });
+
+        // Touch Control Buttons
+        const btnJump = document.getElementById('btnJump');
+        const btnDuck = document.getElementById('btnDuck');
+
+        btnJump.addEventListener('touchstart', (e) => { e.preventDefault(); triggerJump(); });
+        btnJump.addEventListener('mousedown', (e) => { e.preventDefault(); triggerJump(); });
+
+        btnDuck.addEventListener('touchstart', (e) => { e.preventDefault(); setDuck(true); });
+        btnDuck.addEventListener('touchend', (e) => { e.preventDefault(); setDuck(false); });
+        btnDuck.addEventListener('mousedown', (e) => { e.preventDefault(); setDuck(true); });
+        btnDuck.addEventListener('mouseup', (e) => { e.preventDefault(); setDuck(false); });
+
+        // Audio Toggle Button
+        const audioToggleBtn = document.getElementById('audioToggleBtn');
+        audioToggleBtn.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            audioToggleBtn.innerText = soundEnabled ? '🔊 Suara: AKTIF' : '🔇 Suara: MATI';
+        });
+
+        document.getElementById('startBtn').addEventListener('click', startGame);
+
+        function update() {
+            frameCount++;
+            // Gradual Speed Increase
+            gameSpeed = 5 + Math.floor(score / 80) * 0.4;
+            const multiplier = 1 + Math.floor(score / 150) * 0.5;
+            document.getElementById('multiplierDisplay').innerText = `x${multiplier.toFixed(1)} Multiplier`;
+
+            // Player Physics
+            const floorY = canvas.height - 50;
+
+            player.vy += player.gravity;
+            player.y += player.vy;
+
+            if (player.y + player.height >= floorY) {
+                player.y = floorY - player.height;
+                player.vy = 0;
+                player.grounded = true;
+            }
+
+            // Player Trail Effect
+            player.trail.push({ x: player.x, y: player.y, width: player.width, height: player.height });
+            if (player.trail.length > 6) player.trail.shift();
+
+            // Spawn Obstacles (Ground Block or High Laser)
+            if (frameCount % Math.max(35, 95 - Math.floor(score / 30)) === 0) {
+                const isHighLaser = Math.random() > 0.55;
+                if (isHighLaser) {
+                    obstacles.push({
+                        x: canvas.width + 20,
+                        y: floorY - player.normalHeight - 12,
+                        width: 28,
+                        height: 20,
+                        type: 'laser',
+                        color: '#ff007f'
+                    });
+                } else {
+                    obstacles.push({
+                        x: canvas.width + 20,
+                        y: floorY - 32,
+                        width: 30,
+                        height: 32,
+                        type: 'block',
+                        color: '#ff0055'
+                    });
+                }
+            }
+
+            // Spawn Crystals
+            if (frameCount % 60 === 0 && Math.random() > 0.3) {
+                const crystalY = Math.random() > 0.5 ? floorY - 35 : floorY - 75;
+                crystals.push({
+                    x: canvas.width + 20,
+                    y: crystalY,
+                    size: 12,
+                    collected: false
+                });
+            }
+
+            // Move Obstacles & Collision Check
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                let obs = obstacles[i];
+                obs.x -= gameSpeed;
+
+                // AABB Collision Detection
+                if (
+                    player.x < obs.x + obs.width &&
+                    player.x + player.width > obs.x &&
+                    player.y < obs.y + obs.height &&
+                    player.y + player.height > obs.y
+                ) {
+                    createParticles(player.x + player.width / 2, player.y + player.height / 2, '#ff007f', 35);
+                    gameOver();
+                    return;
+                }
+
+                if (obs.x + obs.width < 0) {
+                    obstacles.splice(i, 1);
+                    score += Math.floor(10 * multiplier);
+                    document.getElementById('scoreDisplay').innerText = score;
+                }
+            }
+
+            // Move Crystals & Collection
+            for (let i = crystals.length - 1; i >= 0; i--) {
+                let cry = crystals[i];
+                cry.x -= gameSpeed;
+
+                // Collision with player center
+                const pCenterX = player.x + player.width / 2;
+                const pCenterY = player.y + player.height / 2;
+                const dist = Math.hypot(pCenterX - cry.x, pCenterY - cry.y);
+
+                if (dist < player.width / 2 + cry.size) {
+                    createParticles(cry.x, cry.y, '#00f3ff', 15);
+                    playSound('crystal');
+                    crystalsCollected++;
+                    score += Math.floor(25 * multiplier);
+                    document.getElementById('scoreDisplay').innerText = score;
+                    crystals.splice(i, 1);
+                    continue;
+                }
+
+                if (cry.x + cry.size < 0) {
+                    crystals.splice(i, 1);
+                }
+            }
+
+            // Particles Update
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= p.decay;
+                if (p.alpha <= 0) particles.splice(i, 1);
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const floorY = canvas.height - 50;
+
+            // Draw Neon Floor
+            ctx.strokeStyle = '#00f3ff';
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = '#00f3ff';
+            ctx.beginPath();
+            ctx.moveTo(0, floorY);
+            ctx.lineTo(canvas.width, floorY);
+            ctx.stroke();
+
+            // Perspective Floor Grid Lines
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = 'rgba(0, 243, 255, 0.15)';
+            ctx.lineWidth = 1;
+            const gridOffset = (frameCount * gameSpeed) % 30;
+            for (let x = -gridOffset; x < canvas.width; x += 30) {
+                ctx.beginPath();
+                ctx.moveTo(x, floorY);
+                ctx.lineTo(x - 20, canvas.height);
+                ctx.stroke();
+            }
+
+            // Player Motion Blur Trail
+            player.trail.forEach((t, index) => {
+                ctx.fillStyle = `rgba(0, 243, 255, ${0.08 * (index + 1)})`;
+                ctx.fillRect(t.x, t.y, t.width, t.height);
+            });
+
+            // Render Player
+            ctx.shadowBlur = 16;
+            ctx.shadowColor = '#00f3ff';
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+
+            // Inner player core
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(player.x + 4, player.y + 4, player.width - 8, player.height - 8);
+
+            // Render Obstacles
+            obstacles.forEach(obs => {
+                ctx.shadowBlur = 16;
+                ctx.shadowColor = obs.color;
+                ctx.fillStyle = obs.color;
+                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(obs.x + 3, obs.y + 3, obs.width - 6, obs.height - 6);
+            });
+
+            // Render Crystals
+            crystals.forEach(cry => {
+                ctx.shadowBlur = 14;
+                ctx.shadowColor = '#00f3ff';
+                ctx.save();
+                ctx.translate(cry.x, cry.y);
+                ctx.rotate(frameCount * 0.06);
+                ctx.fillStyle = '#00f3ff';
+                ctx.beginPath();
+                ctx.moveTo(0, -cry.size);
+                ctx.lineTo(cry.size, 0);
+                ctx.lineTo(0, cry.size);
+                ctx.lineTo(-cry.size, 0);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(-2, -2, 4, 4);
+                ctx.restore();
+            });
+
+            // Render Particles
+            particles.forEach(p => {
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = p.color;
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = Math.max(0, p.alpha);
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1.0;
+            ctx.shadowBlur = 0;
+        }
+
+        // Main Animation Request Loop
+        function gameLoop() {
+            if (!isRunning) return;
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Initial Draw to Render Background Grid
+        draw();
     </script>
-
 </body>
 </html>
+```
